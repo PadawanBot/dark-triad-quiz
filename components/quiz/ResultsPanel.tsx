@@ -115,6 +115,17 @@ export default function ResultsPanel({
   const [tier3Loading, setTier3Loading] = useState(false);
   const [tier3Error, setTier3Error] = useState<string | null>(null);
 
+  // ── Promo banner state ───────────────────────────────────────────────────
+  const [promoBarDismissed, setPromoBarDismissed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('mindarchive_promo_dismissed') === '1';
+  });
+
+  const handlePromoBarDismiss = () => {
+    setPromoBarDismissed(true);
+    localStorage.setItem('mindarchive_promo_dismissed', '1');
+  };
+
   // Leaderboard opt-in state (inside Tier 2)
   const [lbOptIn, setLbOptIn] = useState(false);
   const [lbNickname, setLbNickname] = useState('');
@@ -344,6 +355,26 @@ export default function ResultsPanel({
         {/* ── TIER 2: Content (shown after email gate) ──────────────────────── */}
         {tier2Unlocked && (
           <>
+            {/* MindArchive Promo Banner */}
+            {!promoBarDismissed && (
+              <div className="relative rounded-xl border border-amber-500/40 bg-[#1a1200] p-4 mb-6 flex items-start gap-3">
+                <div className="flex-1 text-sm text-gray-300 leading-relaxed">
+                  🎬 Watching the MindArchive Dark Triad video? Use code{' '}
+                  <span className="font-mono font-bold text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded">
+                    MINDARCHIVE
+                  </span>
+                  {' '}at checkout for <strong className="text-white">50% off</strong> the full report.
+                </div>
+                <button
+                  onClick={handlePromoBarDismiss}
+                  className="text-gray-600 hover:text-gray-400 transition-colors ml-2 flex-shrink-0 text-base leading-none"
+                  aria-label="Dismiss promo banner"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
             {/* Radar Chart */}
             <div className="rounded-xl border border-white/10 bg-white/3 p-6 mb-6">
               <div className="flex items-center justify-between mb-4">
@@ -485,6 +516,14 @@ export default function ResultsPanel({
               </button>
               {tier3Error && <p className="text-xs text-red-400 mt-2 text-center">{tier3Error}</p>}
               <p className="text-center text-xs text-gray-700 mt-2">One-time payment · Instant download · 30-day guarantee</p>
+              <p className="text-center text-xs text-gray-500 mt-1.5">
+                Subscribers: use code{' '}
+                <span className="font-mono font-bold text-amber-400 bg-amber-400/10 px-1 py-0.5 rounded text-xs">
+                  MINDARCHIVE
+                </span>
+                {' '}at checkout for 50% off →{' '}
+                <strong className="text-amber-300">$3.49 USD</strong>
+              </p>
             </div>
           </>
         )}
