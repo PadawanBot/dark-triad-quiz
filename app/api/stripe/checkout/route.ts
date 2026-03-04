@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
       customer_email: session.email ?? undefined,
       success_url: `${baseUrl}/quiz/success?session_id={CHECKOUT_SESSION_ID}&quiz_session_id=${sessionId}`,
       cancel_url: `${baseUrl}/quiz?session=${sessionId}`,
+      allow_promotion_codes: true,
     });
 
     return NextResponse.json({ url: checkoutSession.url });
