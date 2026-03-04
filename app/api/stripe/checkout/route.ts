@@ -50,12 +50,12 @@ export async function POST(req: NextRequest) {
       line_items: [
         {
           price_data: {
-            currency: 'aud',
+            currency: 'usd',
             product_data: {
-              name: 'Dark Triad Action Plan',
-              description: 'Your personalised psychological profile and strategy guide based on your Dark Triad assessment results.',
+              name: 'Dark Triad Full Report',
+              description: 'Your personalised Dark Triad psychological profile — trait deep-dive, relationship patterns, and evidence-based strategies. Delivered as a PDF.',
             },
-            unit_amount: 900, // $9.00 AUD in cents
+            unit_amount: 699, // $6.99 USD in cents
           },
           quantity: 1,
         },
