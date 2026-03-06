@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 // PDF Report Generator using @react-pdf/renderer
 // Server-side only — do NOT import in client components
 
