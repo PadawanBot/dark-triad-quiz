@@ -130,7 +130,7 @@ export default function HomePage() {
           </p>
           <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/10">
             <iframe
-              src="https://www.youtube.com/embed/jdZ9CQPKMvw"
+              src="https://www.youtube.com/embed/giXkTVUFQ40"
               title="The Dark Triad Explained"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
