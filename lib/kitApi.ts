@@ -15,27 +15,28 @@ interface KitSubscribeFields {
 
 export async function kitSubscribeWithTag(
   email: string,
-  fields: KitSubscribeFields
+  fields: KitSubscribeFields,
+  tagName: string = "dark-triad-quiz"
 ): Promise<{ success: boolean; error?: string }> {
   const apiKey = process.env.KIT_API_KEY;
   if (!apiKey) return { success: false, error: "No KIT_API_KEY configured" };
 
   try {
-    // Step 1: Get tags list to find dark-triad-quiz tag
+    // Step 1: Get tags list to find the requested tag
     const tagsRes = await fetch(`${KIT_BASE}/tags?api_key=${apiKey}`);
     if (!tagsRes.ok) {
       return { success: false, error: `Kit tags fetch failed: ${tagsRes.status}` };
     }
     const tagsData = await tagsRes.json();
     const tags: KitTag[] = tagsData.tags ?? [];
-    let tag = tags.find((t) => t.name === "dark-triad-quiz");
+    let tag = tags.find((t) => t.name === tagName);
 
     // Step 2: Create tag if it doesn't exist
     if (!tag) {
       const createRes = await fetch(`${KIT_BASE}/tags`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ api_key: apiKey, tag: { name: "dark-triad-quiz" } }),
+        body: JSON.stringify({ api_key: apiKey, tag: { name: tagName } }),
       });
       if (!createRes.ok) {
         return { success: false, error: `Kit tag create failed: ${createRes.status}` };

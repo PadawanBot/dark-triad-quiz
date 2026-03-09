@@ -562,7 +562,7 @@ export function DarkTriadReport({ scores, percentiles, subjectName }: ReportData
         <View style={styles.ctaBox}>
           <Text style={styles.ctaTitle}>The Automated Doctor</Text>
           <Text style={styles.ctaBody}>
-            Evidence-based psychology for people who want to understand themselves and the people around them. No jargon. No fluff. Just the science, applied.{'\n\n'}Take the challenge link from your results page and send it to someone you're curious about. The comparison often reveals more than the individual scores.
+            Evidence-based psychology for people who want to understand themselves and the people around them. No jargon. No fluff. Just the science, applied.{'\n\n'}Take the challenge link from your results page and send it to someone you&apos;re curious about. The comparison often reveals more than the individual scores.
           </Text>
           <Text style={styles.ctaUrl}>quiz.theautomateddoctor.com</Text>
           <Text style={styles.disclaimer}>
