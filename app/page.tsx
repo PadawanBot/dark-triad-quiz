@@ -119,6 +119,46 @@ export default function HomePage() {
         </div>
       </section>
 
+
+
+      {/* ── GASLIGHTING CTA ─────────────────────────────────────────────── */}
+      <section className="py-20 px-6 bg-[#0b1220] border-y border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <div className="rounded-2xl border border-[#2980b9]/30 bg-gradient-to-br from-[#2980b9]/15 to-transparent p-8 md:p-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full border border-[#2980b9]/40 bg-[#2980b9]/10 text-[#6fb6ff] text-xs font-semibold uppercase tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#6fb6ff] animate-pulse" />
+              New Assessment
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h2 className="text-3xl sm:text-4xl font-black tracking-tight mb-3">
+                  You’re Not Crazy — You Might Be Getting Gaslit
+                </h2>
+                <p className="text-gray-300 leading-relaxed">
+                  A short, non-diagnostic pattern-check to help you notice common indicators
+                  and get an evidence-informed Reality Grounding Guide.
+                </p>
+                <p className="mt-3 text-xs text-gray-500">
+                  Not a diagnosis. Not proof. Not confirmation of intent.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-4 md:items-end">
+                <a
+                  href="/gaslighting"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-[#2980b9] hover:bg-[#1f6fa1] text-white font-bold text-lg rounded-lg transition-colors duration-200 shadow-lg shadow-[#2980b9]/20"
+                >
+                  Take the Gaslighting Quiz
+                </a>
+                <p className="text-xs text-gray-500 md:text-right max-w-sm">
+                  Free PDF + 7-day micro-plan delivered to your inbox after the quiz.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* ── VIDEO SECTION ─────────────────────────────────────────────────── */}
       <section className="py-16 px-6 bg-black/30">
         <div className="max-w-3xl mx-auto text-center">
