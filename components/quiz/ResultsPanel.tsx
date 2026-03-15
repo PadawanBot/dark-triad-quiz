@@ -122,6 +122,7 @@ export default function ResultsPanel({
   const [copiedChallenge, setCopiedChallenge] = useState(false);
   const [directInput, setDirectInput] = useState('');
   const [directSent, setDirectSent] = useState(false);
+  const [nativeShareDone, setNativeShareDone] = useState(false);
 
   // ── Tier 2: Email gate state ──────────────────────────────────────────────
   const [tier2Email, setTier2Email] = useState('');
@@ -158,6 +159,21 @@ export default function ResultsPanel({
   const shareText = encodeURIComponent(
     `I just scored ${scores.composite}/100 on the Dark Triad Profiler. My dominant trait: ${dominantTrait.charAt(0).toUpperCase() + dominantTrait.slice(1)}. What's yours?`
   );
+
+  const handleNativeShare = async () => {
+    const text = `I scored ${scores.composite}/100 on the Dark Triad Profiler. My dominant trait: ${dominantTrait.charAt(0).toUpperCase() + dominantTrait.slice(1)}. What's yours? ${shareUrl}`;
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({ title: 'My Dark Triad Results', text, url: shareUrl });
+        setNativeShareDone(true);
+        setTimeout(() => setNativeShareDone(false), 3000);
+      } catch { /* user cancelled */ }
+    } else {
+      handleCopy(shareUrl);
+      setCopiedShare(true);
+      setTimeout(() => setCopiedShare(false), 2500);
+    }
+  };
 
   const handleDirectShare = () => {
     const val = directInput.trim();
@@ -624,6 +640,36 @@ export default function ResultsPanel({
             >
               {directSent ? '✓ Sent!' : 'Send →'}
             </button>
+          </div>
+        </div>
+
+        {/* ── Book CTA ──────────────────────────────────────────────────── */}
+        <div className="rounded-xl border border-[#4ade80]/30 bg-gradient-to-b from-[#0a1f0a] to-[#060f06] p-6 mb-6">
+          <div className="flex items-start gap-4">
+            <div className="text-3xl">📘</div>
+            <div className="flex-1">
+              <p className="text-xs text-[#4ade80] font-semibold uppercase tracking-widest mb-1">From the creator of this quiz</p>
+              <h2 className="text-lg font-black text-white mb-2">Want to understand the psychology behind your score?</h2>
+              <p className="text-sm text-gray-400 leading-relaxed mb-4">
+                <em>The Automated Doctor</em> explores AI-powered self-analysis and how to build personal systems that work for — not against — your psychology. No technical knowledge required.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href="https://a.co/d/0cs0zZDb"
+                  target="_blank"
+                  rel="noopener"
+                  className="flex-1 py-3 bg-[#4ade80] hover:bg-[#22c55e] text-black font-bold text-sm text-center rounded-lg transition-colors"
+                >
+                  📘 Get the Book on Amazon →
+                </a>
+                <button
+                  onClick={handleNativeShare}
+                  className="flex-1 py-3 bg-white/8 hover:bg-white/12 border border-white/10 text-white font-semibold text-sm rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  {nativeShareDone ? '✓ Shared!' : '🔗 Share My Result'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
