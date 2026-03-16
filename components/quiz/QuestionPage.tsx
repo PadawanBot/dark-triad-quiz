@@ -163,13 +163,26 @@ function QuestionCard({
             }`}
           >
             <span className="text-base sm:text-lg font-bold">{v}</span>
-            <span className="text-[8px] sm:text-[10px] uppercase tracking-wide leading-tight text-center block">
+            {/* Full label — hidden on mobile, shown on sm+ */}
+            <span className="hidden sm:block text-[10px] uppercase tracking-wide leading-tight text-center">
               {LIKERT_LABELS[v - 1].split(' ').map((w, i) => (
                 <span key={i} className="block">{w}</span>
               ))}
             </span>
           </button>
         ))}
+      </div>
+      {/* Mobile anchor labels — shown below the buttons on small screens */}
+      <div className="flex justify-between sm:hidden mt-1 px-0.5">
+        <span className="text-[10px] text-gray-500 uppercase tracking-wide leading-tight text-left max-w-[60px]">
+          Strongly<br/>Disagree
+        </span>
+        <span className="text-[10px] text-gray-500 uppercase tracking-wide leading-tight text-center">
+          Neutral
+        </span>
+        <span className="text-[10px] text-gray-500 uppercase tracking-wide leading-tight text-right max-w-[60px]">
+          Strongly<br/>Agree
+        </span>
       </div>
     </div>
   );
