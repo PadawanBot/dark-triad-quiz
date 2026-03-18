@@ -88,7 +88,15 @@ export default async function ReportPage({ params }: PageProps) {
           </Link>
         </div>
 
-        <p className="text-xs text-gray-700 text-center mt-12">
+        {/* Bookmark prompt */}
+        <div className="rounded-xl border border-white/10 bg-white/5 p-5 mt-12 text-center">
+          <p className="text-xs text-gray-500 mb-2">📎 Save this page</p>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            This is your permanent report URL. Bookmark it or copy the link to return anytime.
+          </p>
+        </div>
+
+        <p className="text-xs text-gray-700 text-center mt-6">
           The Automated Doctor · quiz.theautomateddoctor.com
         </p>
 
