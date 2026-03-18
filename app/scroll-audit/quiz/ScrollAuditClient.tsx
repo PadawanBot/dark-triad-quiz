@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { QUESTIONS, SECTIONS, scoreAnswers } from '@/lib/scroll-audit-questions';
 
@@ -9,18 +9,27 @@ export default function ScrollAuditClient() {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
 
   const question = QUESTIONS[current];
   const total = QUESTIONS.length;
-  const progress = Math.round((current / total) * 100);
+  const progress = Math.round(((current + 1) / total) * 100);
   const section = SECTIONS.find((s) => s.id === question.section);
 
-  async function handleAnswer(letter: string) {
+  const handleAnswer = useCallback(async (letter: string) => {
+    // Guard: ignore taps during transition or submission
+    if (submitting || transitioning) return;
+
     const newAnswers = { ...answers, [question.id]: letter };
     setAnswers(newAnswers);
 
     if (current < total - 1) {
-      setCurrent(current + 1);
+      // Brief lock to prevent tap-through to next question's answers
+      setTransitioning(true);
+      setTimeout(() => {
+        setCurrent((c) => c + 1);
+        setTransitioning(false);
+      }, 120);
       return;
     }
 
@@ -39,10 +48,10 @@ export default function ScrollAuditClient() {
     }
 
     router.push(`/scroll-audit/result?profile=${profile}`);
-  }
+  }, [answers, current, question.id, submitting, total, transitioning, router]);
 
   function handleBack() {
-    if (current > 0) setCurrent(current - 1);
+    if (current > 0 && !transitioning && !submitting) setCurrent(current - 1);
   }
 
   return (
@@ -50,33 +59,17 @@ export default function ScrollAuditClient() {
       <div className="max-w-lg w-full">
 
         {/* Progress bar */}
-        <div className="mb-8">
+        <div className="mb-10">
           <div className="flex justify-between text-xs text-gray-600 mb-2">
             <span>{section?.title}</span>
             <span>{current + 1} / {total}</span>
           </div>
-          <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+          <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
             <div
               className="h-full bg-[#c0392b] rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-        </div>
-
-        {/* Section pills */}
-        <div className="flex gap-2 mb-8 flex-wrap">
-          {SECTIONS.map((s) => (
-            <span
-              key={s.id}
-              className={`text-xs px-3 py-1 rounded-full border transition-colors ${
-                s.id === question.section
-                  ? 'border-[#c0392b] text-[#c0392b] bg-[#c0392b]/10'
-                  : 'border-white/10 text-gray-600'
-              }`}
-            >
-              {s.title}
-            </span>
-          ))}
         </div>
 
         {/* Question */}
@@ -89,9 +82,9 @@ export default function ScrollAuditClient() {
           {question.answers.map((a) => (
             <button
               key={a.letter}
-              onClick={() => !submitting && handleAnswer(a.letter)}
-              disabled={submitting}
-              className="w-full text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-[#c0392b]/50 hover:bg-[#c0392b]/5 transition-all text-sm text-gray-300 leading-relaxed disabled:opacity-50"
+              onClick={() => handleAnswer(a.letter)}
+              disabled={submitting || transitioning}
+              className="w-full text-left p-4 rounded-xl border border-white/10 bg-white/5 active:border-[#c0392b]/60 active:bg-[#c0392b]/8 transition-all text-sm text-gray-300 leading-relaxed disabled:opacity-50 select-none"
             >
               {a.label}
             </button>
@@ -99,7 +92,7 @@ export default function ScrollAuditClient() {
         </div>
 
         {/* Back */}
-        {current > 0 && (
+        {current > 0 && !submitting && (
           <button
             onClick={handleBack}
             className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
