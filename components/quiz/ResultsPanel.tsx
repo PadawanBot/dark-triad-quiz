@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { TraitScores, TraitPercentiles } from '@/lib/scoring';
 import { traitSummary, compositeSummary } from '@/lib/scoring';
+import { getCharacterMatch } from '@/lib/character-map';
 
 const TRAIT_CONFIG = {
   narcissism: { label: 'Narcissism', color: '#f0c040', bg: 'rgba(240,192,64,0.12)' },
@@ -97,6 +98,11 @@ export default function ResultsPanel({
       : process.env.NEXT_PUBLIC_BASE_URL ?? '';
   const shareUrl = `${baseUrl}/r/${shareToken}`;
   const challengeUrl = challengeToken ? `${baseUrl}/c/${challengeToken}` : null;
+  const characterMatch = getCharacterMatch(
+    percentiles.narcissism,
+    percentiles.machiavellianism,
+    percentiles.psychopathy
+  );
 
   const handleCopy = (url: string) => {
     if (navigator.clipboard && window.isSecureContext) {
@@ -640,6 +646,33 @@ export default function ResultsPanel({
             >
               {directSent ? '✓ Sent!' : 'Send →'}
             </button>
+          </div>
+        </div>
+
+        {/* ── Character Match Teaser ──────────────────────────────────── */}
+        <div className="rounded-xl border border-[#c0392b]/40 bg-gradient-to-b from-[#1a0505] to-[#0d0202] p-6 mb-6">
+          <p className="text-xs text-[#c0392b] font-semibold uppercase tracking-widest mb-3">
+            Your Dark Triad Character Match
+          </p>
+          <div className="mb-1">
+            <span className="text-2xl font-black text-white">{characterMatch.name}</span>
+            <span className="ml-2 text-sm text-gray-500">{characterMatch.franchise}</span>
+          </div>
+          <p className="text-gray-300 text-sm italic mb-4">
+            &ldquo;{characterMatch.tagline}&rdquo;
+          </p>
+          <p className="text-gray-400 text-sm leading-relaxed mb-4">
+            {characterMatch.shortDescription}
+          </p>
+          <div className="rounded-lg border border-white/10 bg-black/30 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-base">🔒</span>
+              <p className="text-sm font-semibold text-white">Full Character Analysis — in the paid report</p>
+            </div>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Why you match this profile, your specific trait breakdown, real-world implications,
+              and alternate character matches — all in your $6.99 report.
+            </p>
           </div>
         </div>
 
