@@ -11,6 +11,7 @@ import {
   StyleSheet,
 
 } from '@react-pdf/renderer';
+import { getCharacterMatch } from '@/lib/character-map';
 
 interface TraitScores {
   narcissism: number;
@@ -573,6 +574,65 @@ export function DarkTriadReport({ scores, percentiles, subjectName }: ReportData
           </Text>
         </View>
       </Page>
+
+      {/* ── Character Match Page ── */}
+      {(() => {
+        const cm = getCharacterMatch(percentiles.narcissism, percentiles.machiavellianism, percentiles.psychopathy);
+        return (
+          <Page size="A4" style={styles.page}>
+            <Text style={styles.brandBadge}>The Automated Doctor · Dark Triad Profiler</Text>
+            <View style={{ marginBottom: 20 }}>
+              <Text style={{ fontSize: 10, color: COLORS.red, fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 8 }}>
+                Your Character Match
+              </Text>
+              <Text style={{ fontSize: 28, fontWeight: 'bold', color: COLORS.white, marginBottom: 4 }}>
+                {cm.name}
+              </Text>
+              <Text style={{ fontSize: 12, color: COLORS.gray, marginBottom: 16 }}>
+                {cm.franchise}
+              </Text>
+              <View style={{ borderLeftWidth: 3, borderLeftColor: COLORS.red, paddingLeft: 12, marginBottom: 20 }}>
+                <Text style={{ fontSize: 13, color: COLORS.lightGray, fontStyle: 'italic' }}>
+                  &ldquo;{cm.tagline}&rdquo;
+                </Text>
+              </View>
+            </View>
+
+            <View style={{ marginBottom: 20 }}>
+              <Text style={{ fontSize: 11, color: '#cccccc', lineHeight: 1.7 }}>
+                {cm.fullAnalysis}
+              </Text>
+            </View>
+
+            <View style={{ marginBottom: 20 }}>
+              <Text style={{ fontSize: 10, color: COLORS.red, fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 10 }}>
+                Your Trait Breakdown
+              </Text>
+              {[
+                { label: 'Narcissism', note: cm.traitBreakdown.N },
+                { label: 'Machiavellianism', note: cm.traitBreakdown.M },
+                { label: 'Psychopathy', note: cm.traitBreakdown.P },
+              ].map((t) => (
+                <View key={t.label} style={{ flexDirection: 'row', marginBottom: 8, paddingBottom: 8, borderBottomWidth: 1, borderBottomColor: '#1a1a1a' }}>
+                  <Text style={{ fontSize: 10, fontWeight: 'bold', color: COLORS.white, width: 120 }}>{t.label}</Text>
+                  <Text style={{ fontSize: 10, color: COLORS.lightGray, flex: 1 }}>{t.note}</Text>
+                </View>
+              ))}
+            </View>
+
+            <View style={{ marginBottom: 16 }}>
+              <Text style={{ fontSize: 10, color: COLORS.gray, marginBottom: 6 }}>Also matches:</Text>
+              <Text style={{ fontSize: 10, color: COLORS.lightGray }}>
+                {cm.altCharacters.join('  ·  ')}
+              </Text>
+            </View>
+
+            <Text style={styles.disclaimer}>
+              Character matches are illustrative only, drawn from well-known fictional and public figures to make trait patterns more vivid and memorable. They are not clinical classifications.
+            </Text>
+          </Page>
+        );
+      })()}
     </Document>
   );
 }
