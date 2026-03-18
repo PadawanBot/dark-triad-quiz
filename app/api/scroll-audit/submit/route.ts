@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
         // Send to Kit (ConvertKit) — non-blocking
         if (process.env.KIT_API_KEY) {
-          const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://quiz.theautomateddoctor.com';
+          const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL ?? 'https://quiz.theautomateddoctor.com').replace(/\/$/, '');
           const reportUrl = `${baseUrl}/scroll-audit/report/${reportToken}`;
           // Subscribe via scroll-audit tag (ID: 17627291)
           fetch(`https://api.convertkit.com/v3/tags/17627291/subscribe`, {
