@@ -163,11 +163,11 @@ export default function ResultsPanel({
     .sort(([, a], [, b]) => (b as number) - (a as number))[0][0];
 
   const shareText = encodeURIComponent(
-    `I just scored ${scores.composite}/100 on the Dark Triad Profiler. My dominant trait: ${dominantTrait.charAt(0).toUpperCase() + dominantTrait.slice(1)}. What's yours?`
+    `I took the Dark Triad Profiler and my character match is ${characterMatch.name} (${characterMatch.franchise}).\n\n"${characterMatch.tagline}"\n\nWhat's yours? ${shareUrl}`
   );
 
   const handleNativeShare = async () => {
-    const text = `I scored ${scores.composite}/100 on the Dark Triad Profiler. My dominant trait: ${dominantTrait.charAt(0).toUpperCase() + dominantTrait.slice(1)}. What's yours? ${shareUrl}`;
+    const text = `I took the Dark Triad Profiler and my character match is ${characterMatch.name} (${characterMatch.franchise}). "${characterMatch.tagline}" What's yours? ${shareUrl}`;
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({ title: 'My Dark Triad Results', text, url: shareUrl });
