@@ -27,6 +27,8 @@ export async function POST(req: NextRequest) {
 
         // Send to Kit (ConvertKit) — non-blocking
         if (process.env.KIT_API_KEY) {
+          const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://quiz.theautomateddoctor.com';
+          const reportUrl = `${baseUrl}/scroll-audit/report/${reportToken}`;
           fetch('https://api.kit.com/v4/subscribers', {
             method: 'POST',
             headers: {
@@ -36,7 +38,10 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({
               email_address: email,
               tags: [`scroll-audit`, `profile-${profile}`],
-              fields: { scroll_profile: profile },
+              fields: {
+                scroll_profile: profile,
+                scroll_report_url: reportUrl,
+              },
             }),
           }).catch(() => {/* non-critical */});
         }
