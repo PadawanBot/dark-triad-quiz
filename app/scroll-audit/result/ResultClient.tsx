@@ -5,6 +5,13 @@ import { useRouter } from 'next/navigation';
 import type { ScrollProfile } from '@/lib/scroll-audit-questions';
 import { PROFILES } from '@/lib/scroll-audit-questions';
 
+const SHARE_TWEETS: Record<ScrollProfile, string> = {
+  autopilot: `I just took the Scroll Audit and I'm The Autopilot.\n\nMy scrolling isn't driven by emotion — it's pure habit running below conscious control.\n\nFind out what drives yours: https://quiz.theautomateddoctor.com/scroll-audit`,
+  connection_seeker: `I just took the Scroll Audit and I'm The Connection Seeker.\n\nI scroll because my nervous system is looking for something it can't find in a feed.\n\nFind out what drives yours: https://quiz.theautomateddoctor.com/scroll-audit`,
+  stimulation_hunter: `I just took the Scroll Audit and I'm The Stimulation Hunter.\n\nMy brain is wired for novelty — the feed simulates scarcity to keep me hunting.\n\nFind out what drives yours: https://quiz.theautomateddoctor.com/scroll-audit`,
+  performer: `I just took the Scroll Audit and I'm The Performer.\n\nMy scrolling is built around feedback loops — variable-ratio reinforcement, same as a slot machine.\n\nFind out what drives yours: https://quiz.theautomateddoctor.com/scroll-audit`,
+};
+
 interface Props {
   profile: ScrollProfile;
 }
@@ -16,6 +23,17 @@ export default function ResultClient({ profile }: Props) {
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const shareTweet = SHARE_TWEETS[profile];
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTweet)}`;
+
+  function handleCopy() {
+    navigator.clipboard.writeText(shareTweet).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
 
   async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -56,6 +74,28 @@ export default function ResultClient({ profile }: Props) {
           <h1 className="text-3xl font-black text-white mb-2">{def.name}</h1>
           <p className="text-gray-400 italic text-sm mb-6">&ldquo;{def.tagline}&rdquo;</p>
           <p className="text-gray-300 text-sm leading-relaxed">{def.teaser}</p>
+        </div>
+
+        {/* Share mechanic */}
+        <div className="rounded-xl border border-white/10 bg-white/5 p-5 mb-6">
+          <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Share your result</p>
+          <p className="text-xs text-gray-500 leading-relaxed mb-4 font-mono bg-black/40 p-3 rounded-lg whitespace-pre-line">{shareTweet}</p>
+          <div className="flex gap-3">
+            <a
+              href={tweetUrl}
+              target="_blank"
+              rel="noopener"
+              className="flex-1 py-2.5 bg-black border border-white/20 hover:border-white/40 text-white text-sm font-semibold text-center rounded-lg transition-colors"
+            >
+              𝕏 Post on X
+            </a>
+            <button
+              onClick={handleCopy}
+              className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-semibold rounded-lg transition-colors"
+            >
+              {copied ? '✓ Copied' : 'Copy text'}
+            </button>
+          </div>
         </div>
 
         {/* Email wall */}
