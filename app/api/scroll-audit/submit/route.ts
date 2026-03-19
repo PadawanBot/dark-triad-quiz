@@ -42,6 +42,30 @@ export async function POST(req: NextRequest) {
               },
             }),
           }).catch(() => {/* non-critical */});
+
+          // Send report email via AgentMail
+          if (process.env.AGENTMAIL_API_KEY) {
+            const profileNames: Record<string, string> = {
+              autopilot: 'The Autopilot',
+              connection_seeker: 'The Connection Seeker',
+              stimulation_hunter: 'The Stimulation Hunter',
+              performer: 'The Performer',
+            };
+            const profileName = profileNames[profile] ?? profile;
+            fetch('https://api.agentmail.to/v0/inboxes/scroll-audit@agentmail.to/messages/send', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.AGENTMAIL_API_KEY}`,
+              },
+              body: JSON.stringify({
+                to: [email],
+                subject: `Your Scroll Audit Report — ${profileName}`,
+                text: `Your Scroll Audit profile: ${profileName}\n\nYour full report is here:\n${reportUrl}\n\nBookmark this link — it's your permanent report.\n\n— The Automated Doctor`,
+                html: `<p>Your Scroll Audit profile: <strong>${profileName}</strong></p><p><a href="${reportUrl}">View your full report →</a></p><p>Bookmark this link — it's your permanent report.</p><p>— The Automated Doctor</p>`,
+              }),
+            }).catch(() => {/* non-critical */});
+          }
         }
 
         return NextResponse.json({ success: true, reportToken });
